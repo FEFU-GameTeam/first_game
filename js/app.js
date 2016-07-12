@@ -13,6 +13,7 @@ var map = [];
 
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
+var map = [];
 canvas.width = 640;
 canvas.height = 416;
 document.body.appendChild(canvas);
@@ -63,6 +64,7 @@ var ground = {
 	pos: [0, 0],
 	sprite: new Sprite('img/ground.png', [0, 0], [32, 32], 0, 0)	
  }
+
 
 var block = {
 	pos: [0, 0],
@@ -236,9 +238,8 @@ function checkPlayerBounds() {
 
 function render() {
 	build.draw(map);
-
-    renderEntity(player);
 	
+    renderEntity(player);
 };
 
 function renderEntity(entity) {
