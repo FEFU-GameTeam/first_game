@@ -64,7 +64,7 @@ var mapping = (function() {
 			B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B,
 			B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
 			B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
-			B,  ,  , B,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  , B,  ,  , B,  ,  , E,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
 			B,  ,  , B, B,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
 			B,  ,  , B,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
 			B,  ,  , B, B, B, B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
@@ -133,11 +133,12 @@ var build = (function() {
 							//ctx.fillRect(x, y, x + spriteSize, y + spriteSize);
 							break;
 						case E:
-							//ctx.fillStyle = '#FFFFFF';
-							//ctx.fillRect(x, y, x + spriteSize, y + spriteSize);
+							ground.pos = [x, y];
+							renderEntity(ground);
 							break;
 						default:
 							grass.pos = [x, y];
+							grasses.push(grass.pos);
 							renderEntity(grass);
 							//ctx.fillStyle = '#1F6F15';
 							//ctx.fillRect(x, y, x + spriteSize, y + spriteSize);

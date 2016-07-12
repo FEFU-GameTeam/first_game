@@ -11,6 +11,7 @@ var requestAnimFrame = (function(){
 
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
+var map = [];
 canvas.width = 640;
 canvas.height = 416;
 document.body.appendChild(canvas);
@@ -28,6 +29,7 @@ function main() {
 
 function init() {
     reset();
+	mapping.setMap(map, 1);
     lastTime = Date.now();
     main();
 }
@@ -39,7 +41,8 @@ resources.load([
 	'img/right.png',
     'img/1.png',
 	'img/grass3.png',
-	'img/block.png'
+	'img/block.png',
+	'img/ground.png'
 ]);
 resources.onReady(init);
 
@@ -54,12 +57,19 @@ var grass = {
     sprite: new Sprite('img/grass3.png', [0, 0], [32, 32], 0, 0)	
 }
 
+var ground = {
+	pos: [0, 0],
+    sprite: new Sprite('img/ground.png', [0, 0], [32, 32], 0, 0)	
+}
+
 var block = {
 	pos: [0, 0],
     sprite: new Sprite('img/block.png', [0, 0], [32, 32], 0, 0)	
 }
 
 var blocks = [];
+var grasses = [];
+
 
 var lastFire = Date.now();
 var terrainPattern;
@@ -128,7 +138,22 @@ function boxCollides(pos, size, pos2, size2) {
 }
 
 function checkCollisions() {
-		checkPlayerBounds();
+	checkPlayerBounds();
+	
+	for (var i = 0; i < grasses.length; i++){
+		var size2 = [20, player.sprite.size[1] - 30];
+		var pos2 = [player.pos[0] + 2, player.pos[1] + 28];
+
+		var pos = grasses[i];
+		var size = grass.sprite.size;
+	
+		if(boxCollides(pos, size, pos2, size2)) {
+			var x = Math.floor((pos[0] + 16) / 32);
+			var y = Math.floor((pos[1] + 16) / 32);
+			map[y][x] = 'Empty';
+		}
+	}
+		
 	for(var i = 0; i < blocks.length; i++){
         var pos = blocks[i];
         var size = block.sprite.size;
@@ -171,12 +196,9 @@ function checkPlayerBounds() {
 }
 
 function render() {
-	var map = [];
-	mapping.setMap(map, 1);
 	build.draw(map);
-
-    renderEntity(player);
 	
+    renderEntity(player);
 };
 
 function renderEntity(entity) {
