@@ -1,9 +1,9 @@
+var B = 'Block';
+var C = 'Coin';
+var S = 'Stone';
+var E = 'Empty';
+
 var mapping = (function() {
-	
-	var B = 'Block';
-	var P = 'Bonus';
-	var S = 'Stone';
-	var E = 'Empty';
 	
 	var map_2 = {
 		map : [
@@ -25,11 +25,6 @@ var mapping = (function() {
 			width : 20,
 			height : 12,
 		},
-		
-		wizard : {
-			x : 1,
-			y : 1
-		}
 	};
 	
 	var map_0 = { 
@@ -45,18 +40,13 @@ var mapping = (function() {
 			, B,  , B,  , B,  , B,  , B, B, B,  , B,  , B,  ,  ,  ,  ,
 			, B,  , B,  , B, B, B,  , B, B, B,  , B, B,  ,  ,  ,  ,  ,
 			, B,  ,  ,  ,  ,  ,  ,  , B,  , B,  , B,  , B,  ,  ,  ,  ,
-			, B,  , B,  ,  ,  , B,  , B, B, B,  , B,  , B,  , P,  ,  ,
+			, B,  , B,  ,  ,  , B,  , B, B, B,  , B,  , B,  , C,  ,  ,
 		],
 		
 		size : {
 			width : 20,
 			height : 12,
 		},
-		
-		wizard : {
-			x : 1,
-			y : 1
-		}
 	};
 	
 	var map_1 = {
@@ -64,10 +54,10 @@ var mapping = (function() {
 			B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B,
 			B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
 			B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  , B,  ,  , B,  ,  , E,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  , B, B,  , B,  ,  ,  ,  ,  ,  , C,  ,  ,  ,  ,  , B,
 			B,  ,  , B,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
-			B,  ,  , B, B,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
-			B,  ,  , B,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
-			B,  ,  , B, B, B, B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  , B, B, B, B,  ,  ,  ,  ,  ,  , C, C,  ,  ,  ,  , B,
 			B,  ,  , B,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
 			B,  ,  , B,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
 			B,  ,  , B,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
@@ -108,10 +98,6 @@ var mapping = (function() {
 var build = (function() {
 	
 	var spriteSize = 32, spriteSizeH = 32, spriteSizeW = 32;
-	var B = 'Block';
-	var P = 'Bonus';
-	var S = 'Stone';
-	var E = 'Empty';
 	
 	return {
 		draw: function(data) {
@@ -124,25 +110,28 @@ var build = (function() {
 							blocks.push(block.pos);
 							renderEntity(block);
 							break;
-						case P:
-							//ctx.fillStyle = '#00FF00';
-							//ctx.fillRect(x, y, x + spriteSize, y + spriteSize);
+						case C:
+							coin.pos = [x, y];
+							coins.push(coin.pos);
+							renderEntity(coin);
 							break;
 						case S:
 							//ctx.fillStyle = '#000000';
 							//ctx.fillRect(x, y, x + spriteSize, y + spriteSize);
 							break;
 						case E:
-							//ctx.fillStyle = '#FFFFFF';
-							//ctx.fillRect(x, y, x + spriteSize, y + spriteSize);
+							ground.pos = [x, y];
+							renderEntity(ground);
 							break;
 						default:
 							grass.pos = [x, y];
+							grasses.push(grass.pos);
 							renderEntity(grass);
 							//ctx.fillStyle = '#1F6F15';
 							//ctx.fillRect(x, y, x + spriteSize, y + spriteSize);
 							break;
 					}
+										
 										
 					
 				}

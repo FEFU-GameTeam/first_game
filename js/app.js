@@ -9,6 +9,8 @@ var requestAnimFrame = (function(){
         };
 })();
 
+var map = [];
+
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = 640;
@@ -28,25 +30,28 @@ function main() {
 
 function init() {
     reset();
+	mapping.setMap(map, 1);
     lastTime = Date.now();
     main();
 }
 
 resources.load([
-    'img/pered.png',
-	'img/zad.png',
+    'img/front.png',
+	'img/back.png',
 	'img/left.png',
 	'img/right.png',
     'img/1.png',
 	'img/grass3.png',
-	'img/block.png'
+	'img/block.png',
+	'img/ground.png',
+	'img/coin.png'
 ]);
 resources.onReady(init);
 
 var player = {
     pos: [0, 0],
 	btn: '',
-    sprite: new Sprite('img/pered.png', [0, 0], [32, 48], 0, [0, 1, 2, 3])
+    sprite: new Sprite('img/front.png', [0, 0], [32, 48], 0, [0, 1, 2, 3])
 };
 
 var grass = {
@@ -54,12 +59,24 @@ var grass = {
     sprite: new Sprite('img/grass3.png', [0, 0], [32, 32], 0, 0)	
 }
 
+var ground = {
+	pos: [0, 0],
+	sprite: new Sprite('img/ground.png', [0, 0], [32, 32], 0, 0)	
+ }
+
 var block = {
 	pos: [0, 0],
     sprite: new Sprite('img/block.png', [0, 0], [32, 32], 0, 0)	
 }
 
+var coin = {
+	pos: [0, 0],
+    sprite: new Sprite('img/coin.png', [0, 0], [32, 32], 0, 0)	
+}
+
 var blocks = [];
+var grasses = [];
+var coins = [];
 
 var lastFire = Date.now();
 var terrainPattern;
@@ -86,12 +103,12 @@ function handleInput(dt) {
 	
     if(input.isDown('DOWN') || input.isDown('s')) {
         player.pos[1] += playerSpeed * dt;
-		player.sprite.url = 'img/pered.png';
+		player.sprite.url = 'img/front.png';
 		player.sprite.speed = 14;
 		player.btn = 'DOWN';
 	} else if(input.isDown('UP') || input.isDown('w')) {
         player.pos[1] -= playerSpeed * dt;
-		player.sprite.url = 'img/zad.png';
+		player.sprite.url = 'img/back.png';
 		player.sprite.speed = 14;
 		player.btn = 'UP';
     } else if(input.isDown('LEFT') || input.isDown('a')) {
@@ -128,7 +145,70 @@ function boxCollides(pos, size, pos2, size2) {
 }
 
 function checkCollisions() {
-		checkPlayerBounds();
+	checkPlayerBounds();
+	checkCrossGrass();
+	checkCrossCoins();
+}
+
+function checkCrossGrass() {
+	
+	for (var i = 0; i < grasses.length; i++){
+		var size2 = [20, player.sprite.size[1] - 30];
+		var pos2 = [player.pos[0] + 2, player.pos[1] + 28];
+		 
+		var pos = grasses[i];
+		var size = grass.sprite.size;
+
+		if(boxCollides(pos, size, pos2, size2)) {
+		var x = Math.floor((pos[0] + 16) / 32);
+		var y = Math.floor((pos[1] + 16) / 32);
+		map[y][x] = E;
+		}
+	}
+	
+}
+
+function checkCrossCoins() {
+	
+	for(var i = 0; i < coins.length; i++){
+		
+		if (coins[i] == undefined)
+			continue;
+		
+		var size2 = [20, player.sprite.size[1] - 30];
+		var pos2 = [player.pos[0] + 2, player.pos[1] + 28];
+		
+		var pos = coins[i];
+        var size = coin.sprite.size;
+		
+        if(boxCollides(pos, size, pos2, size2)) {
+			var x = Math.floor( (pos[0] + 16) / 32 );
+			var y = Math.floor( (pos[1] + 16) / 32);
+			map[y][x] = E;
+			delete coins[i];
+			break;
+		}
+	}
+	
+	
+	
+}
+
+function checkPlayerBounds() {
+    if(player.pos[0] < 0) {
+        player.pos[0] = 0;
+    }
+    else if(player.pos[0] > canvas.width - player.sprite.size[0]) {
+        player.pos[0] = canvas.width - player.sprite.size[0];
+    }
+
+    if(player.pos[1] < 0) {
+        player.pos[1] = 0;
+    }
+    else if(player.pos[1] > canvas.height - player.sprite.size[1]) {
+        player.pos[1] = canvas.height - player.sprite.size[1];
+    }
+	
 	for(var i = 0; i < blocks.length; i++){
         var pos = blocks[i];
         var size = block.sprite.size;
@@ -154,25 +234,7 @@ function checkCollisions() {
 	}
 }
 
-function checkPlayerBounds() {
-    if(player.pos[0] < 0) {
-        player.pos[0] = 0;
-    }
-    else if(player.pos[0] > canvas.width - player.sprite.size[0]) {
-        player.pos[0] = canvas.width - player.sprite.size[0];
-    }
-
-    if(player.pos[1] < 0) {
-        player.pos[1] = 0;
-    }
-    else if(player.pos[1] > canvas.height - player.sprite.size[1]) {
-        player.pos[1] = canvas.height - player.sprite.size[1];
-    }
-}
-
 function render() {
-	var map = [];
-	mapping.setMap(map, 1);
 	build.draw(map);
 
     renderEntity(player);
