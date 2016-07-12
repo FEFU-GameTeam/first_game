@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Fifteen</title>
+		<script>
+			function NewGame(){
+				var size = document.getElementById('SizeFifteen').value;
+				var steps = document.getElementById('steps');
+					steps.innerHTML = "Steps: 0";
+				init(size);
+			}
+		</script>
+		<script src="1.js"></script>
+	</head>
+	<body onload="init()">
+	<center>
+		<select id = "SizeFifteen">
+			<option value = "3" checked>3</option>
+			<option value = "4">4</option>
+			<option value = "5">5</option>
+			<option value = "6">6</option>
+			<option value = "7">7</option>
+			<option value = "8">8</option>
+		</select>
+		<button onclick = "javascript:init();">Новая игра</button>
+		<br>
+		<canvas id="fifteen">No support!</canvas>
+		<font size="4" face="Comic Sans MS"><div id = "steps">Steps: 0</div></font>
+	</center>
+	</body>
+</html>
