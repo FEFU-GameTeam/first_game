@@ -1,13 +1,13 @@
 
 (function() {
-    function Sprite(url, pos, size, speed, frames, dir, once) {
+    function Sprite(url, pos, size, speed, frames, once, indexFrame) {
         this.pos = pos;
         this.size = size;
         this.speed = typeof speed === 'number' ? speed : 0;
         this.frames = frames;
+		this.indexFrame = indexFrame;
         this._index = 0;
         this.url = url;
-        this.dir = dir || 'horizontal';
         this.once = once;
     };
 
@@ -23,26 +23,21 @@
                 var max = this.frames.length;
                 var idx = Math.floor(this._index);
                 frame = this.frames[idx % max];
-
+				this.indexFrame = idx % max;
                 if(this.once && idx >= max) {
-                    this.done = true;
-                    return;
+                    //this.done = true;
+					//this.frames = 5;
+					this.speed = 0;
+					//return;
                 }
             }
             else {
                 frame = 0;
             }
 
-
+			var y = this.pos[1];
             var x = this.pos[0];
-            var y = this.pos[1];
-
-            if(this.dir == 'vertical') {
-                y += frame * this.size[1];
-            }
-            else {
-                x += frame * this.size[0];
-            }
+            x += frame * this.size[0];
 
             ctx.drawImage(resources.get(this.url),
                           x, y,
