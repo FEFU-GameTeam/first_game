@@ -35,7 +35,7 @@ function main() {
 
 function init() {
     reset();
-	mapping.setMap(map, 1);
+	mapping.setMap(map, 3);
 	objectCount();
 	door = mapping.getDoor();
 	coinsCount = coins.length;
@@ -56,6 +56,9 @@ function objectCount() {
 				case C:
 					coins.push([x, y]);
 					break;
+				case P:
+					buildPenguin(x, y);
+					map[i][j] = E;					
 				case S:
 					break;
 				case E:
@@ -78,9 +81,10 @@ resources.load([
 	'img/grass3.png',
 	'img/block.png',
 	'img/ground.png',
-	'img/coin.png',
+	'img/coin.png',	
 	'img/penguin1.png',
-	'img/penguin2.png'
+	'img/penguin2.png',
+	'img/penguin3.png'
 ]);
 resources.onReady(init);
 
@@ -89,13 +93,6 @@ var player = {
 	btn: '',
     sprite: new Sprite('img/front.png', [0, 0], [32, 48], 0, [0, 1, 2, 3])
 };
-
-
-var penguin = {
-	pos: [0, 0],
-	inflated: false,
-    sprite: new Sprite('img/penguin1.png', [0, 0], [32, 32], 0, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])	
-}
 
 var grass = {
 	pos: [0, 0],
@@ -126,14 +123,13 @@ var lastFire = Date.now();
 var terrainPattern;
 
 var playerSpeed = 100;
-var penguinSpeed = 40;
 
 function update(dt) {
 
     handleInput(dt);
+    updateEntities(dt);
 	penguinMove(dt);
 	updatePenguins(dt);
-    updateEntities(dt);
     checkCollisions();
 	isGameFinished();
 
@@ -189,10 +185,6 @@ function updateEntities(dt) {
     player.sprite.update(dt);
 }
 
-function updatePenguins(dt){
-	penguin.sprite.update(dt);
-}
-
 function collides(x, y, r, b, x2, y2, r2, b2) {
     return !(r <= x2 || x > r2 ||
              b <= y2 || y > b2);
@@ -207,71 +199,9 @@ function boxCollides(pos, size, pos2, size2) {
 
 function checkCollisions() {
 	checkPlayerBounds();
-	checkCrossPenguin();
 	checkCrossGrass();
+	checkCrossPenguin();
 	checkCrossCoins();
-}
-
-function checkCrossPenguin() {
-		var size2 = [20, player.sprite.size[1] - 30];
-		var pos2 = [player.pos[0] + 2, player.pos[1] + 28];
-		 
-		var pos = penguin.pos;
-		var size = penguin.sprite.size;
-		
-        if(boxCollides(pos, size, pos2, size2)) {
-			if(penguin.inflated)
-				alert('Game Over');
-			else{
-			switch (player.btn) {
-					case 'RIGHT':
-						player.pos[0] = pos[0] - 25;
-						break;
-					case 'LEFT':
-						player.pos[0] = pos[0] + size[0];
-						break;
-					case 'UP':
-						player.pos[1] = pos[1] + size[1] - 28;
-						break;
-					case 'DOWN':
-						player.pos[1] = pos[1] - player.sprite.size[1] - 2;
-						break;
-				}
-			}
-		}
-		
-		//if(boxCollides(pos, size, pos2, size2))
-}
-
-
-function penguinMove(dt){
-	var pos = penguin.pos;
-	var size = penguin.sprite.size;
-	var x = Math.floor((pos[0] + 16) / 32);
-	var y = Math.floor((pos[1] + 32) / 32);
-	if(map[y][x] == E){
-		if(penguin.inflated)
-			pos[1] += penguinSpeed * dt;
-		else {
-			penguin.sprite.speed = 4;
-			if(penguin.sprite.indexFrame === 8){
-				penguin.sprite.url = 'img/penguin2.png';
-				penguin.sprite.frames = [0, 1, 2, 3, 4, 5, 6];
-				penguin.inflated = true;
-			}
-		};
-	} else {
-		if(penguin.inflated){
-			penguin.sprite.url = 'img/penguin1.png';
-			penguin.sprite.frames = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
-			if(penguin.sprite.indexFrame === 0){
-				penguin.sprite.speed = 0;
-				penguin.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-				penguin.inflated = false;
-			}
-		}			
-	}
-	
 }
 
 function checkCrossGrass() {
@@ -392,8 +322,8 @@ function openDoor() {
 
 function render() {
 	build.draw(map);
-	
-	renderEntity(penguin);	
+	for(var i = 0; i < penguins.length; i++)
+		renderEntity(penguins[i]);
     renderEntity(player);
 };
 
@@ -405,6 +335,6 @@ function renderEntity(entity) {
 }
 
 function reset() {
-	penguin.pos = [450, 50];
+	//penguin.pos = [450, 50];
     player.pos = [50, canvas.height / 2];
 };

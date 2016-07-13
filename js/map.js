@@ -4,6 +4,8 @@ var B = 'Block';
 var C = 'Coin';
 var S = 'Stone';
 var E = 'Empty';
+var P = 'Penguin';
+
 
 var mapping = (function() {
 	
@@ -58,7 +60,7 @@ var mapping = (function() {
 			B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
 			B,  ,  , B,  ,  , B,  ,  , E,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
 			B,  ,  , B, B,  , B,  ,  ,  ,  ,  ,  , C,  ,  ,  ,  ,  , B,
-			B,  ,  , B,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B, B, B,
+			B,  ,  , B,  ,  , B,  ,  ,  ,  ,  ,  ,  , P,  ,  , B, B, B,
 			B,  ,  , B, B, B, B,  ,  ,  ,  ,  ,  , C, C,  ,  ,  ,  , B,
 			B,  ,  , B,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B, B, B,
 			B,  ,  , B,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
@@ -83,7 +85,39 @@ var mapping = (function() {
 		}
 	};
 	
-	var maps = [map_0, map_1, map_2], num = 0, door, level;
+	var map_3 = {
+		map : [
+			B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B,
+			B,  ,  ,  ,  ,  , P,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  , P, B,
+			B,  ,  ,  ,  ,  , C,  ,  , B,  , C, C,  , C, C,  , P, C, B,
+			B,C , B, B, B, B, B, B,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  ,  , B, C, B,  , P, B,  ,  ,  , C,  , C, P,  ,  , B,
+			B,  ,  ,  ,  , C, B,  , C, B, C, C, P, P, P,  , C, B, B, B,
+			B, B, B, B, B, B, B, C, C, B,  ,  , C, C, C,  ,  ,  ,  , B,
+			B,  ,  , B, P, C, B,  ,  , B,  ,  ,  ,  ,  , P, B, B, B, B,
+			B,  , B, B,  , C, B, C,  , B, C,  ,  , C,  , C, C,  , C, B,
+			B,  ,  , B, C,  , B,  ,  , B, B, B, B, B, B, P,  ,  ,  , B,
+			B,  ,  ,  ,  ,  , B, P,  , B, P, C, C, P, B,  ,  ,  ,  , B,
+			B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B,
+		],
+		
+		size : {
+			width : 20,
+			height : 13,
+		},
+		
+		door : {
+			pos : [19, 6],
+			size : [32, 32],
+		},
+		
+		wizard : {
+			pos : [1, 6],
+		}
+	};
+	
+	var maps = [map_0, map_1, map_2, map_3], num = 0, door, level;
 	
 	return {
 		
