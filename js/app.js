@@ -9,11 +9,15 @@ var requestAnimFrame = (function(){
         };
 })();
 
+
+const MAX_INT = Math.pow(2, 53) - 1;
 var map = [];
+var door;
+var coinsCount = 0;
+
 
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
-var map = [];
 canvas.width = 640;
 canvas.height = 416;
 document.body.appendChild(canvas);
@@ -32,8 +36,37 @@ function main() {
 function init() {
     reset();
 	mapping.setMap(map, 1);
+	objectCount();
+	door = mapping.getDoor();
+	coinsCount = coins.length;
     lastTime = Date.now();
     main();
+}
+
+function objectCount() {
+	
+	for (var i = 0; i < map.length; i++) {
+		for (var j = 0; j < map[i].length; j++) {
+			var y = i * spriteSize, x = j * spriteSize;
+			
+			switch (map[i][j]) {
+				case B:
+					blocks.push([x, y]);
+					break;
+				case C:
+					coins.push([x, y]);
+					break;
+				case S:
+					break;
+				case E:
+					break;
+				default:
+					grasses.push([x, y]);
+					break;
+			}	
+		}
+	}
+			
 }
 
 resources.load([
@@ -72,7 +105,7 @@ var grass = {
 var ground = {
 	pos: [0, 0],
 	sprite: new Sprite('img/ground.png', [0, 0], [32, 32], 0, 0)	
- }
+}
 
 
 var block = {
@@ -102,8 +135,20 @@ function update(dt) {
 	updatePenguins(dt);
     updateEntities(dt);
     checkCollisions();
+	isGameFinished();
 
 };
+
+function isGameFinished() {
+	
+	var size2 = [10, player.sprite.size[1] - 38];
+	var pos2 = [player.pos[0] + 2, player.pos[1] + 38];
+	var pos = [door.pos[0] * 32 + 8, door.pos[1] * 32 + 8];
+	
+	if(boxCollides(pos2, size2, pos, door.size)) {
+		alert('You Won');	
+	}
+}
 
 function handleInput(dt) {
 	if(input.isDown('SHIFT')){
@@ -265,11 +310,13 @@ function checkCrossCoins() {
 			var y = Math.floor( (pos[1] + 16) / 32);
 			map[y][x] = E;
 			delete coins[i];
+			coinsCount--;
 			break;
 		}
 	}
 	
-	
+	if (coinsCount == 0)
+		openDoor();
 	
 }
 
@@ -311,6 +358,36 @@ function checkPlayerBounds() {
 			}
 		}
 	}
+}
+
+function delObjectByCoords(point) {
+	
+	for (var j = 0; j < blocks.length; j++) {
+		
+		if (point[0] == blocks[j][0] && point[1] == blocks[j][1]) {
+			blocks[j] = [MAX_INT, MAX_INT];
+			break;
+		}
+	}
+	
+}
+
+function openDoor() {
+	
+	for (var i = 0; i < (door.size[0] / 32); i++) {
+		var a = [(door.pos[0] + i) * 32, door.pos[1] * 32];
+		delObjectByCoords(a);
+		map[door.pos[1]][door.pos[0] + i] = E;
+	}
+	
+	for (var i = 0; i < (door.size[1] / 32); i++) {
+		var a = [door.pos[0] * 32, (door.pos[1] + i) * 32];
+		delObjectByCoords(a);
+		map[door.pos[1] + i][door.pos[0]] = E;
+	}
+	
+	coinsCount = -1; 
+	
 }
 
 function render() {
