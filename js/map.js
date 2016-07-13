@@ -5,6 +5,7 @@ var C = 'Coin';
 var S = 'Stone';
 var E = 'Empty';
 var P = 'Penguin';
+var H = 'Heroy';
 
 
 var mapping = (function() {
@@ -94,7 +95,7 @@ var mapping = (function() {
 			B,  ,  ,  , B, C, B,  , P, B,  ,  ,  , C,  , C, P,  ,  , B,
 			B,  ,  ,  ,  , C, B,  , C, B, C, C, P, P, P,  , C, B, B, B,
 			B, B, B, B, B, B, B, C, C, B,  ,  , C, C, C,  ,  ,  ,  , B,
-			B,  ,  , B, P, C, B,  ,  , B,  ,  ,  ,  ,  , P, B, B, B, B,
+			B,  , H, B, P, C, B,  ,  , B,  ,  ,  ,  ,  , P, B, B, B, B,
 			B,  , B, B,  , C, B, C,  , B, C,  ,  , C,  , C, C,  , C, B,
 			B,  ,  , B, C,  , B,  ,  , B, B, B, B, B, B, P,  ,  ,  , B,
 			B,  ,  ,  ,  ,  , B, P,  , B, P, C, C, P, B,  ,  ,  ,  , B,
@@ -155,10 +156,6 @@ var build = (function() {
 							block.pos = [x, y];
 							renderEntity(block);
 							break;
-						case C:
-							coin.pos = [x, y];
-							renderEntity(coin);
-							break;
 						case S:
 							//ctx.fillStyle = '#000000';
 							//ctx.fillRect(x, y, x + spriteSize, y + spriteSize);
@@ -166,6 +163,14 @@ var build = (function() {
 						case E:
 							ground.pos = [x, y];
 							renderEntity(ground);
+							break;
+						case H:
+							player.pos = [x, y];
+							renderEntity(player);
+							break;
+						case C:
+							coin.pos = [x, y];
+							renderEntity(coin);
 							break;
 						default:
 							grass.pos = [x, y];

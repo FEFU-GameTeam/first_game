@@ -30,13 +30,14 @@ function main() {
     render();
 
     lastTime = now;
-    requestAnimFrame(main);
+	//setTimeout(main, 1000 / 10)
+	requestAnimFrame(main);
 };
 
 function init() {
-    reset();
+//    reset();
 	mapping.setMap(map, 3);
-	objectCount();
+//	objectCount();
 	door = mapping.getDoor();
 	coinsCount = coins.length;
     lastTime = Date.now();
@@ -91,7 +92,7 @@ resources.onReady(init);
 var player = {
     pos: [0, 0],
 	btn: '',
-    sprite: new Sprite('img/front.png', [0, 0], [32, 48], 0, [0, 1, 2, 3])
+    sprite: new Sprite('img/front.png', [0, 0], [24, 32], 4, [0, 1, 2, 3])
 };
 
 var grass = {
@@ -126,168 +127,52 @@ var playerSpeed = 100;
 
 function update(dt) {
 
-    handleInput(dt);
-    updateEntities(dt);
-	penguinMove(dt);
-	updatePenguins(dt);
-    checkCollisions();
-	isGameFinished();
+//    handleInput(dt);
+    document.addEventListener('keydown', keydown, false);
+ //   document.addEventListener('keyup',   keyup,   false);	
+//    updateEntities(dt);
+//	penguinMove(dt);
+//	updatePenguins(dt);
+//    checkCollisions();
+//	isGameFinished();
 
 };
+var KEY = { LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40 };
 
-function isGameFinished() {
-	
-	var size2 = [10, player.sprite.size[1] - 38];
-	var pos2 = [player.pos[0] + 2, player.pos[1] + 38];
-	var pos = [door.pos[0] * 32 + 8, door.pos[1] * 32 + 8];
-	
-	if(boxCollides(pos2, size2, pos, door.size)) {
-		alert('You Won');	
-	}
-}
-
-function handleInput(dt) {
-	if(input.isDown('SHIFT')){
-		playerSpeed = 200;
-		player.sprite.speed = 20;
-	} else {
-		playerSpeed = 100;
-		player.sprite.speed = 14;
-	}
-		
-	
-    if(input.isDown('DOWN') || input.isDown('s')) {
-        player.pos[1] += playerSpeed * dt;
-		player.sprite.url = 'img/front.png';
-		player.sprite.speed = 14;
-		player.btn = 'DOWN';
-	} else if(input.isDown('UP') || input.isDown('w')) {
-        player.pos[1] -= playerSpeed * dt;
-		player.sprite.url = 'img/back.png';
-		player.sprite.speed = 14;
-		player.btn = 'UP';
-    } else if(input.isDown('LEFT') || input.isDown('a')) {
-        player.pos[0] -= playerSpeed * dt;
-		player.sprite.url = 'img/left.png';
-		player.sprite.speed = 14;
-		player.btn = 'LEFT';
-    } else if(input.isDown('RIGHT') || input.isDown('d')) {
-        player.pos[0] += playerSpeed * dt;
-		player.sprite.url = 'img/right.png';
-		player.sprite.speed = 14;
-		player.btn = 'RIGHT';
-    } else {
-		player.sprite.speed = 0;
-	}
-}
-
-function updateEntities(dt) {
-    player.sprite.update(dt);
-}
-
-function collides(x, y, r, b, x2, y2, r2, b2) {
-    return !(r <= x2 || x > r2 ||
-             b <= y2 || y > b2);
-}
-
-function boxCollides(pos, size, pos2, size2) {
-    return collides(pos[0], pos[1],
-                    pos[0] + size[0], pos[1] + size[1],
-                    pos2[0], pos2[1],
-                    pos2[0] + size2[0], pos2[1] + size2[1]);
-}
-
-function checkCollisions() {
-	checkPlayerBounds();
-	checkCrossGrass();
-	checkCrossPenguin();
-	checkCrossCoins();
-}
-
-function checkCrossGrass() {
-	
-	for (var i = 0; i < grasses.length; i++){
-		var size2 = [20, player.sprite.size[1] - 30];
-		var pos2 = [player.pos[0] + 2, player.pos[1] + 28];
-		 
-		var pos = grasses[i];
-		var size = grass.sprite.size;
-
-		if(boxCollides(pos, size, pos2, size2)) {
-			var x = Math.floor((pos[0] + 16) / 32);
-			var y = Math.floor((pos[1] + 16) / 32);
+function keydown(ev) {
+	var y = Math.floor(player.pos[1] / 32);
+	var x = Math.floor(player.pos[0] / 32);
+    var handled = false;
+    switch(ev.keyCode) {
+      case KEY.UP:     
+        if(checkPlayerBounds(y - 1, x)){
 			map[y][x] = E;
+			map[y - 1][x] = H;
 		}
-	}
-	
-}
-
-function checkCrossCoins() {
-	
-	for(var i = 0; i < coins.length; i++){
-		
-		if (coins[i] == undefined)
-			continue;
-		
-		var size2 = [20, player.sprite.size[1] - 30];
-		var pos2 = [player.pos[0] + 2, player.pos[1] + 28];
-		
-		var pos = coins[i];
-        var size = coin.sprite.size;
-		
-        if(boxCollides(pos, size, pos2, size2)) {
-			var x = Math.floor( (pos[0] + 16) / 32 );
-			var y = Math.floor( (pos[1] + 16) / 32);
+		break;
+      case KEY.DOWN:
+       if(checkPlayerBounds(y + 1, x)){
+			map[y + 1][x] = H;
 			map[y][x] = E;
-			delete coins[i];
-			coinsCount--;
-			break;
-		}
-	}
-	
-	if (coinsCount == 0)
-		openDoor();
-	
+		};
+		break;
+      case KEY.LEFT:               
+        if(checkPlayerBounds(y, x - 1)){
+			map[y][x] = E;
+			map[y][x - 1] = H;  
+		};
+		break;
+      case KEY.RIGHT:      		
+        if(checkPlayerBounds(y, x + 1)){
+			map[y][x] = E;
+			map[y][x + 1] = H;  
+		};
+		break;
+    }
 }
 
-function checkPlayerBounds() {
-    if(player.pos[0] < 0) {
-        player.pos[0] = 0;
-    }
-    else if(player.pos[0] > canvas.width - player.sprite.size[0]) {
-        player.pos[0] = canvas.width - player.sprite.size[0];
-    }
-
-    if(player.pos[1] < 0) {
-        player.pos[1] = 0;
-    }
-    else if(player.pos[1] > canvas.height - player.sprite.size[1]) {
-        player.pos[1] = canvas.height - player.sprite.size[1];
-    }
-	
-	for(var i = 0; i < blocks.length; i++){
-        var pos = blocks[i];
-        var size = block.sprite.size;
-		var size2 = [20, player.sprite.size[1] - 30];
-		var pos2 = [player.pos[0] + 2, player.pos[1] + 28];
-		
-        if(boxCollides(pos, size, pos2, size2)) {
-			switch (player.btn) {
-				case 'RIGHT':
-					player.pos[0] = pos[0] - 25;
-					break;
-				case 'LEFT':
-					player.pos[0] = pos[0] + size[0];
-					break;
-				case 'UP':
-					player.pos[1] = pos[1] + size[1] - 28;
-					break;
-				case 'DOWN':
-					player.pos[1] = pos[1] - player.sprite.size[1] - 2;
-					break;
-			}
-		}
-	}
+function checkPlayerBounds(y, x) {
+	return (map[y][x] == B) ? false : true;
 }
 
 function delObjectByCoords(point) {
@@ -322,9 +207,9 @@ function openDoor() {
 
 function render() {
 	build.draw(map);
-	for(var i = 0; i < penguins.length; i++)
-		renderEntity(penguins[i]);
-    renderEntity(player);
+	//for(var i = 0; i < penguins.length; i++)
+		//renderEntity(penguins[i]);
+    //renderEntity(player);
 };
 
 function renderEntity(entity) {
@@ -336,5 +221,5 @@ function renderEntity(entity) {
 
 function reset() {
 	//penguin.pos = [450, 50];
-    player.pos = [50, canvas.height / 2];
+    //player.pos = [50, canvas.height / 2];
 };
