@@ -134,6 +134,8 @@ var mapping = (function() {
 						wizard = [i, j];
 					if (level.map[index] == P)
 						buildPenguin(j, i);
+					if (level.map[index] == C)
+						buildCoin(j, i);
 				}
 			}
 			return wizard;
@@ -161,8 +163,8 @@ var build = (function() {
 							renderEntity(block);
 							break;
 						case C:
-							coin.pos = [x, y];
-							renderEntity(coin);
+							ground.pos = [x, y];
+							renderEntity(ground);
 							break;
 						case S:
 							break;

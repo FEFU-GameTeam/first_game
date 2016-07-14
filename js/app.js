@@ -87,6 +87,8 @@ function start(){
 	
 	window.penguins = [];
 	window.penguinSpeed = 100;
+	window.coins = [];
+	window.coinSpeed = 80;
 	init();
 };
 
@@ -132,10 +134,12 @@ function update(dt) {
     handleInput(dt);
     updateEntities(dt);
 	checkCrossPenguin(dt);
+	coinsFall(dt);
 }
 
 function render() {
 	build.draw(map);
+	renderCoins();
     renderEntity(player);
 	renderPenguins();
 };
@@ -265,8 +269,16 @@ function checkPlayerBounds(i, j) {
 
 function checkCoins(i, j) {
 	
-	if (checkObjects(map[i][j], obtains))
+	if (checkObjects(map[i][j], obtains)) {
+		for (var k = 0; k < coins.length; ++k) {
+			if (coins[k].posOnMap[0] == j && coins[k].posOnMap[1] == i) {
+				coins[k] = coins[coins.length - 1]; 
+				coins.pop();
+				break;
+			}
+		}
 		coinsCount--;
+	}
 	
 	if (coinsCount == 0)
 		openDoor();
