@@ -132,6 +132,8 @@ var mapping = (function() {
 					data[i][j] = level.map[index];
 					if (level.map[index] == W)
 						wizard = [i, j];
+					if (level.map[index] == P)
+						buildPenguin(j, i);
 				}
 			}
 			return wizard;

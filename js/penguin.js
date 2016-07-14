@@ -1,10 +1,25 @@
 function buildPenguin(x, y){
 	var penguin = {
-		pos: [x, y],
+		pos: [x * spriteSize, y * spriteSize],
+		posOnMap: [x, y],
+		active : false,
 		inflated: false,
+		inflatedActive: false,
+		prevPos: 0,
 		sprite: new Sprite('img/penguin1.png', [0, 0], [32, 32], 0, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])	
-	}
+	};
 	penguins.push(penguin);
+};
+
+
+function renderPenguins() {
+	for(var i = 0; i < penguins.length; i++){
+		var x = penguins[i].posOnMap[0];
+		var y = penguins[i].posOnMap[1];
+		if (map[y][x] == P){
+			renderEntity(penguins[i]);
+		}
+	}
 }
 
 function updatePenguins(dt){
@@ -12,61 +27,45 @@ function updatePenguins(dt){
 		penguins[i].sprite.update(dt);
 }
 
-
-function checkCrossPenguin() {
-		var size2 = [20, player.sprite.size[1] - 30];
-		var pos2 = [player.pos[0] + 2, player.pos[1] + 28];
+function checkCrossPenguin(dt) {
 	for(var i = 0; i < penguins.length; i++){
-		var pos = [penguins[i].pos[0], penguins[i].pos[1] + 4];
-		var size = penguins[i].sprite.size;
+		var x = penguins[i].posOnMap[0];
+		var y = penguins[i].posOnMap[1];
 		
-        if(boxCollides(pos, size, pos2, size2)) {
+		if(penguinsCheck(penguins[i], dt)){
+			if(map[y + 1][x] == W){
+				if (penguins[i].inflated){
+					alert('Game over!');
+					isGameGoing = false;
+					var dialog = document.getElementById('start_game_dialog');
+					dialog.show();
+				};
+			}
+		} else continue;
+		
+		if ((map[y + 1][x] == E) || (map[y + 1][x] == W)){
 			if(penguins[i].inflated){
-				var posP = [penguins[i].pos[0] + 2, penguins[i].pos[1] + 30];
-				var sizeP = [penguins[i].sprite.size[1] - 28, penguins[i].sprite.size[0] - 2]
-				if(boxCollides(posP, sizeP, pos2, size2))
-					alert('Game Over');
-			}
-			switch (player.btn) {
-					case 'RIGHT':
-						player.pos[0] = pos[0] - 25;
-						break;
-					case 'LEFT':
-						player.pos[0] = pos[0] + size[0];
-						break;
-					case 'UP':
-						player.pos[1] = pos[1] + size[1] - 28;
-						break;
-					case 'DOWN':
-						player.pos[1] = pos[1] - player.sprite.size[1] - 2;
-						break;
-			}
-		}
-	}
-}
-
-function penguinMove(dt){
-	for(var i = 0; i < penguins.length; i++){
-	var pos = penguins[i].pos;
-	var size = penguins[i].sprite.size;
-	var x = Math.floor((pos[0] + 16) / 32);
-	var y = Math.floor((pos[1] + 32) / 32);
-	if(map[y][x] == E){
-		if(penguins[i].inflated)
-			pos[1] += penguinSpeed * dt;
-		else {
-			penguins[i].sprite.url = 'img/penguin1.png';
-			penguins[i].sprite.speed = 10;
-			if(penguins[i].sprite.indexFrame === 10){
-				penguins[i].sprite.url = 'img/penguin2.png';
-				penguins[i].sprite.frames = [0, 1, 2, 3, 4, 5, 6];
-				penguins[i].inflated = true;
-			}
-		};
-	} else {
-		if(penguins[i].inflated){
+				penguins[i].active = true;
+				penguins[i].prevPos = penguins[i].pos[1] + spriteSize;
+				map[y][x] = E;
+				map[y + 1][x] = P;
+				penguins[i].posOnMap = [x, y + 1];
+			} else {
+				penguins[i].sprite.url = 'img/penguin1.png';
+				penguins[i].sprite.speed = 10;
+				penguins[i].inflatedActive = true;
+				if(penguins[i].sprite.indexFrame === 10){
+					penguins[i].sprite.url = 'img/penguin2.png';
+					penguins[i].sprite.speed = 60;
+					penguins[i].sprite.frames = [0, 1, 2, 3, 4, 5, 6];
+					penguins[i].inflatedActive = false;
+					penguins[i].inflated = true;
+				}
+			};
+		} else if (penguins[i].inflated) {
 			penguins[i].sprite.url = 'img/penguin3.png';
 			penguins[i].sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+			penguins[i].sprite.speed = 10;
 			if(penguins[i].sprite.indexFrame == 10){
 				penguins[i].inflated = false;
 				penguins[i].sprite.url = 'img/penguin1.png';
@@ -74,7 +73,20 @@ function penguinMove(dt){
 				penguins[i].sprite.speed = 0; 
 				penguins[i].sprite = new Sprite('img/penguin1.png', [0, 0], [32, 32], 0, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 			}
-		}			
+		}
 	}
-	};	
+}
+
+function penguinsCheck(penguin, dt){
+
+	if (penguin.active) {
+		if (penguin.prevPos > penguin.pos[1]) {
+			penguin.pos[1] += penguinSpeed * dt;
+		} else {
+			penguin.pos[1] = penguin.prevPos;
+			penguin.active = false;
+		}
+		return false;
+	}
+	return true;
 }

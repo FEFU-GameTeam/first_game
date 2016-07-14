@@ -126,24 +126,20 @@ resources.onReady(beginning);
 function update(dt) {
     handleInput(dt);
     updateEntities(dt);
-	//penguinMove(dt);
-	//updatePenguins(dt);
-    //checkCollisions();
-	//isGameFinished();
+	checkCrossPenguin(dt);
 }
 
 function render() {
 	build.draw(map);
-	//for(var i = 0; i < penguins.length; i++)
-	//	renderEntity(penguins[i]);
     renderEntity(player);
+	renderPenguins();
 };
 
 function isGameFinished() {
 
 	var dialog = document.getElementById('start_game_dialog');
 	dialog.show();
-	
+	isGameGoing = false;
 	if (map[player.posOnMap[0]][player.posOnMap[1]] == D)
 		alert('You Won');
 	
@@ -197,7 +193,7 @@ function handleInput(dt) {
 			player.active = true;
 			player.prev = player.pos[1] + spriteSize;
 			map[i][j] = E;
-			map[i + 1][j] = E;
+			map[i + 1][j] = W;
 			player.posOnMap = [i + 1, j];
 		}
 	} else if(input.isDown('UP') || input.isDown('w')) {
@@ -208,7 +204,7 @@ function handleInput(dt) {
 			player.active = true;
 			player.prev = player.pos[1] - spriteSize;
 			map[i][j] = E;
-			map[i - 1][j] = E;
+			map[i - 1][j] = W;
 			player.posOnMap = [i - 1, j];
 		}
     } else if(input.isDown('LEFT') || input.isDown('a')) {
@@ -219,7 +215,7 @@ function handleInput(dt) {
 			player.active = true;
 			player.prev = player.pos[0] - spriteSize;
 			map[i][j] = E;
-			map[i][j - 1] = E;
+			map[i][j - 1] = W;
 			player.posOnMap = [i, j - 1];
 		}
     } else if(input.isDown('RIGHT') || input.isDown('d')) {
@@ -230,7 +226,7 @@ function handleInput(dt) {
 			player.active = true;
 			player.prev = player.pos[0] + spriteSize;
 			map[i][j] = E;
-			map[i][j + 1] = E;
+			map[i][j + 1] = W;
 			player.posOnMap = [i, j + 1];
 		}
     } else {
@@ -284,6 +280,7 @@ function openDoor() {
 function updateEntities(dt) {
     player.sprite.update(dt);
 	door.sprite.update(dt);
+	updatePenguins(dt);
 }
 
 function renderEntity(entity) {
