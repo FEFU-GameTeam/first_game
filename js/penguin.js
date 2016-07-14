@@ -35,9 +35,9 @@ function checkCrossPenguin(dt) {
 		if(penguinsCheck(penguins[i], dt)){
 			if(map[y + 1][x] == W){
 				if (penguins[i].inflated){
-					alert('Game over!');
 					isGameGoing = false;
-					var dialog = document.getElementById('start_game_dialog');
+					var dialog = document.getElementById('end_game_dialog');
+					dialog.style.backgroundImage = 'url(img/game_over.png)'
 					dialog.show();
 				};
 			}

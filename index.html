@@ -13,15 +13,23 @@
     canvas { 
 	background-image:url('img/1.png');
 	}
+    .ind { position: relative; top: 350px; }
   </style>
   </head>
   
   <body>
-    <dialog id="start_game_dialog" open style="width: 1000px; height: 500px; top: 10px">
-      <h3>Super game!</h3>
-      <p>select level and click play!</p>
-      <select id="map_selection" style="font-size: 20pt"></select>
-      <button id="start" style="width: 200px; height: 50px; font-size: 20pt">play</button>
+    <dialog id="start_game_dialog" open style="width: 800px; height: 500px; top: 10px;
+        background-image:url(img/background_dialog.png); background-size: 100%">
+      <div class="ind">
+      <p style="text-align: center; font-size: 24pt; color: rgb(28,113,198)"><b>Select level and click Play!</b></p>
+      <select id="map_selection" style="font-size: 20pt; width: 200px;"></select>
+      <button id="start" style="width: 200px; height: 35px; font-size: 20pt;">Play!</button>
+      </div>
+    </dialog>
+    <dialog id="end_game_dialog" style="width: 800px; height: 500px; top: 10px;
+      background-size: 100%">
+      <button id="start_again" style="position: relative; top: 350px; left: 300px; width: 200px;
+        height: 35px; font-size: 20pt;">Play again!</button>
     </dialog>
     <button id="show">New Game</button>
     <script type="text/javascript" src="js/resources.js"></script>

@@ -35,6 +35,11 @@ function beginning() {
 		option.value = Number(i);
 		select.add(option);
 	};
+	document.getElementById('start_again').onclick = function() {
+		document.getElementById('end_game_dialog').close();
+		dialog.show();
+	};
+
 };
 
 function start(){
@@ -241,10 +246,10 @@ var obtains = [C];
 function checkObjects(obj, collects) {
 	for (var i = 0; i < collects.length; ++i) {
 		if (obj == collects[i]) {
-			if (blocks[i] == D && door.isOpen) {
+			if (blocks[i] == D && door.isOpen && isGameGoing) {
 				isGameGoing = false;
-				alert('You Won!');
-				var dialog = document.getElementById('start_game_dialog');
+				var dialog = document.getElementById('end_game_dialog');
+				dialog.style.backgroundImage = 'url(img/game_win.png)'
 				dialog.show();
 			}
 			return true;
