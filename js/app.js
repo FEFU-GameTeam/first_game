@@ -63,7 +63,7 @@ var player = {
 	speed : 100,
 	active : false,
 	dir: '',
-    sprite: new Sprite('img/front.png', [0, 0], [32, 32], 0, [0, 1, 2, 3])
+    sprite: new Sprite('img/front.png', [0, 0], [18, 32], 0, [0, 1, 2, 3])
 };
 
 var grass = {
@@ -154,34 +154,34 @@ function handleInput(dt) {
 	
     if(input.isDown('DOWN') || input.isDown('s')) {
 		player.dir = 'DOWN';
-		if (!checkPlayerBounds()) {
+		player.sprite.url = 'img/front.png';
+		if (!checkPlayerBounds(player.posOnMap[0] + 1, player.posOnMap[1])) {
 			player.active = true;
 			prev = player.pos[1] + spriteSize;
-			player.sprite.url = 'img/front.png';
 			player.posOnMap = [player.posOnMap[0] + 1, player.posOnMap[1]];
 		}
 	} else if(input.isDown('UP') || input.isDown('w')) {
 		player.dir = 'UP';
-		if (!checkPlayerBounds()) {
+		player.sprite.url = 'img/back.png';
+		if (!checkPlayerBounds(player.posOnMap[0] - 1, player.posOnMap[1])) {
 			player.active = true;
 			prev = player.pos[1] - spriteSize;
-			player.sprite.url = 'img/back.png';
 			player.posOnMap = [player.posOnMap[0] - 1, player.posOnMap[1]];
 		}
     } else if(input.isDown('LEFT') || input.isDown('a')) {
 		player.dir = 'LEFT';
-		if (!checkPlayerBounds()) {
+		player.sprite.url = 'img/left.png';
+		if (!checkPlayerBounds(player.posOnMap[0], player.posOnMap[1] - 1)) {
 			player.active = true;
 			prev = player.pos[0] - spriteSize;
-			player.sprite.url = 'img/left.png';
 			player.posOnMap = [player.posOnMap[0], player.posOnMap[1] - 1];
 		}
     } else if(input.isDown('RIGHT') || input.isDown('d')) {
 		player.dir = 'RIGHT';
-		if (!checkPlayerBounds()) {
+		player.sprite.url = 'img/right.png';
+		if (!checkPlayerBounds(player.posOnMap[0], player.posOnMap[1] + 1)) {
 			player.active = true;
 			prev = player.pos[0] + spriteSize;
-			player.sprite.url = 'img/right.png';
 			player.posOnMap = [player.posOnMap[0], player.posOnMap[1] + 1];
 		}
     } else {
@@ -203,28 +203,9 @@ function checkObjects(obj, collects) {
 	return false;
 }
 
-function checkPlayerBounds() {
-	var i = player.posOnMap[0], j = player.posOnMap[1];
-	
-	switch (player.dir) {
-		case 'RIGHT':
-			if (checkObjects(map[i][j + 1], blocks))
-				return true;
-			break;
-		case 'LEFT':
-			if (checkObjects(map[i][j - 1], blocks))
-				return true;
-			break;
-		case 'UP':
-			if (checkObjects(map[i - 1][j], blocks))
-				return true;
-			break;
-		case 'DOWN':
-			if (checkObjects(map[i + 1][j], blocks))
-				return true;
-			break;
-	}
-	
+function checkPlayerBounds(i, j) {
+	if (checkObjects(map[i][j], blocks))
+		return true;
 	return false;
 }
 
