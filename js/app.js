@@ -9,17 +9,82 @@ var requestAnimFrame = (function(){
         };
 })();
 
-var map = [];
-var coinsCount = 0;
-var isGameGoing = false;
-
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = 640;
 canvas.height = 416;
 document.body.appendChild(canvas);
 
-var lastTime;
+var isGameGoing = false;
+
+function beginning() {
+	var dialog = document.getElementById('start_game_dialog');
+	var select = document.getElementById('map_selection');
+	document.getElementById('show').onclick = function() {
+		dialog.show();
+	};
+	
+	document.getElementById('start').onclick = function() {
+		isGameGoing = true;
+		start();
+		dialog.close();
+	};
+	for (var i = 0; i < 4; ++i){
+		var option = document.createElement('option');
+		option.text = 'map ' + (i + 1);
+		option.value = Number(i);
+		select.add(option);
+	};
+};
+
+function start(){
+	inputkey();
+	window.map = [];
+	window.coinsCount = 0;
+	window.lastTime = 0;
+		
+	window.player = {
+		pos: [0, 0],
+		posOnMap: [0, 0],
+		speed : 100,
+		active : false,
+		dir: '',
+		prev: 0,
+		sprite: new Sprite('img/front.png', [0, 0], [18, 32], 0, [0, 1, 2, 3])
+	};
+
+	window.grass = {
+		pos: [0, 0],
+		sprite: new Sprite('img/grass3.png', [0, 0], [32, 32], 0, 0)	
+	}
+
+	window.ground = {
+		pos: [0, 0],
+		sprite: new Sprite('img/ground.png', [0, 0], [32, 32], 0, 0)	
+	}
+
+
+	window.block = {
+		pos: [0, 0],
+		sprite: new Sprite('img/block.png', [0, 0], [32, 32], 0, 0)	
+	}
+
+	window.coin = {
+		pos: [0, 0],
+		sprite: new Sprite('img/coin.png', [0, 0], [32, 32], 0, 0)	
+	}
+
+	window.door = {
+		pos: [0, 0],
+		isOpen: false,
+		sprite: new Sprite('img/door.png', [0, 0], [32, 32], 0, [0, 1])	
+	}
+	
+	window.penguins = [];
+	window.penguinSpeed = 100;
+	init();
+};
+
 function main() {
     var now = Date.now();
     var dt = (now - lastTime) / 1000.0;
@@ -29,25 +94,6 @@ function main() {
     lastTime = now;
 	if (isGameGoing)
     	requestAnimFrame(main);
-};
-
-function beginning() {
-	var dialog = document.getElementById('start_game_dialog');
-	var select = document.getElementById('map_selection');
-	document.getElementById('show').onclick = function() {
-		dialog.show();
-	};
-	document.getElementById('exit').onclick = function() {
-		isGameGoing = true;
-		init();
-		dialog.close();
-	};
-	for (var i = 0; i < 4; ++i){
-		var option = document.createElement('option');
-		option.text = 'map ' + (i + 1);
-		option.value = Number(i);
-		select.add(option);
-	};
 };
 
 function init() {
@@ -77,46 +123,9 @@ resources.load([
 ]);
 resources.onReady(beginning);
 
-var player = {
-    pos: [0, 0],
-	posOnMap: [0, 0],
-	speed : 100,
-	active : false,
-	dir: '',
-    sprite: new Sprite('img/front.png', [0, 0], [18, 32], 0, [0, 1, 2, 3])
-};
-
-var grass = {
-	pos: [0, 0],
-    sprite: new Sprite('img/grass3.png', [0, 0], [32, 32], 0, 0)	
-}
-
-var ground = {
-	pos: [0, 0],
-	sprite: new Sprite('img/ground.png', [0, 0], [32, 32], 0, 0)	
-}
-
-
-var block = {
-	pos: [0, 0],
-    sprite: new Sprite('img/block.png', [0, 0], [32, 32], 0, 0)	
-}
-
-var coin = {
-	pos: [0, 0],
-    sprite: new Sprite('img/coin.png', [0, 0], [32, 32], 0, 0)	
-}
-
-var door = {
-	pos: [0, 0],
-	isOpen: false,
-	sprite: new Sprite('img/door.png', [0, 0], [32, 32], 0, [0, 1])	
-}
-
 function update(dt) {
     handleInput(dt);
     updateEntities(dt);
-	updateDoor(dt);
 	//penguinMove(dt);
 	//updatePenguins(dt);
     //checkCollisions();
@@ -140,32 +149,30 @@ function isGameFinished() {
 	
 }
 
-var prev = 0;
-
 function handleInput(dt) {
 	
 	if (player.active) {
-		if (player.dir == 'DOWN' && prev > player.pos[1]) {
+		if (player.dir == 'DOWN' && player.prev > player.pos[1]) {
 			player.pos[1] += player.speed * dt;
-		} else if (player.dir == 'UP' && prev < player.pos[1]) {
+		} else if (player.dir == 'UP' && player.prev < player.pos[1]) {
 			player.pos[1] -= player.speed * dt;
-		} else if (player.dir == 'LEFT' && prev < player.pos[0]) {
+		} else if (player.dir == 'LEFT' && player.prev < player.pos[0]) {
 			player.pos[0] -= player.speed * dt;
-		} else if (player.dir == 'RIGHT' && prev > player.pos[0]) {
+		} else if (player.dir == 'RIGHT' && player.prev > player.pos[0]) {
 			player.pos[0] += player.speed * dt;
 		} else {
 			switch (player.dir) {
 				case 'RIGHT':
-					player.pos[0] = prev;
+					player.pos[0] = player.prev;
 					break;
 				case 'LEFT':
-					player.pos[0] = prev;
+					player.pos[0] = player.prev;
 					break;
 				case 'UP':
-					player.pos[1] = prev;
+					player.pos[1] = player.prev;
 					break;
 				case 'DOWN':
-					player.pos[1] = prev;
+					player.pos[1] = player.prev;
 					break;
 				
 			}
@@ -188,7 +195,7 @@ function handleInput(dt) {
 		if (!checkPlayerBounds(i + 1,  j)) {
 			checkCoins(i + 1,  j);
 			player.active = true;
-			prev = player.pos[1] + spriteSize;
+			player.prev = player.pos[1] + spriteSize;
 			map[i][j] = E;
 			map[i + 1][j] = E;
 			player.posOnMap = [i + 1, j];
@@ -199,7 +206,7 @@ function handleInput(dt) {
 		if (!checkPlayerBounds(i - 1,  j)) {
 			checkCoins(i - 1, j);
 			player.active = true;
-			prev = player.pos[1] - spriteSize;
+			player.prev = player.pos[1] - spriteSize;
 			map[i][j] = E;
 			map[i - 1][j] = E;
 			player.posOnMap = [i - 1, j];
@@ -210,7 +217,7 @@ function handleInput(dt) {
 		if (!checkPlayerBounds(i, j - 1)) {
 			checkCoins(i, j - 1);
 			player.active = true;
-			prev = player.pos[0] - spriteSize;
+			player.prev = player.pos[0] - spriteSize;
 			map[i][j] = E;
 			map[i][j - 1] = E;
 			player.posOnMap = [i, j - 1];
@@ -221,7 +228,7 @@ function handleInput(dt) {
 		if (!checkPlayerBounds(i,  j + 1)) {
 			checkCoins(i, j + 1);
 			player.active = true;
-			prev = player.pos[0] + spriteSize;
+			player.prev = player.pos[0] + spriteSize;
 			map[i][j] = E;
 			map[i][j + 1] = E;
 			player.posOnMap = [i, j + 1];
@@ -252,9 +259,7 @@ function checkObjects(obj, collects) {
 }
 
 function checkPlayerBounds(i, j) {
-	if (checkObjects(map[i][j], blocks))
-		return true;
-	return false;
+	return checkObjects(map[i][j], blocks);
 }
 
 function checkCoins(i, j) {
@@ -276,12 +281,9 @@ function openDoor() {
 	
 }
 
-function updateDoor(dt) {
-	door.sprite.update(dt);
-}
-
 function updateEntities(dt) {
     player.sprite.update(dt);
+	door.sprite.update(dt);
 }
 
 function renderEntity(entity) {

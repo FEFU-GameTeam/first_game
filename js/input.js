@@ -1,5 +1,4 @@
-
-(function() {
+var inputkey = function() {
     var pressedKeys = {};
 
     function setKey(event, status) {
@@ -41,4 +40,4 @@
             return pressedKeys[key.toUpperCase()];
         }
     };
-})();
+};

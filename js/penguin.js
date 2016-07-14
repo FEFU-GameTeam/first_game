@@ -1,6 +1,3 @@
-var penguins = [];
-var penguinSpeed = 100;
-
 function buildPenguin(x, y){
 	var penguin = {
 		pos: [x, y],
