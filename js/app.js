@@ -11,6 +11,7 @@ var requestAnimFrame = (function(){
 
 var map = [];
 var coinsCount = 0;
+var isGameGoing = false;
 
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
@@ -26,7 +27,8 @@ function main() {
     render();
 
     lastTime = now;
-    requestAnimFrame(main);
+	if (isGameGoing)
+    	requestAnimFrame(main);
 };
 
 function beginning() {
@@ -36,6 +38,7 @@ function beginning() {
 		dialog.show();
 	};
 	document.getElementById('exit').onclick = function() {
+		isGameGoing = true;
 		init();
 		dialog.close();
 	};
@@ -128,6 +131,9 @@ function render() {
 };
 
 function isGameFinished() {
+
+	var dialog = document.getElementById('start_game_dialog');
+	dialog.show();
 	
 	if (map[player.posOnMap[0]][player.posOnMap[1]] == D)
 		alert('You Won');
@@ -232,8 +238,12 @@ var obtains = [C];
 function checkObjects(obj, collects) {
 	for (var i = 0; i < collects.length; ++i) {
 		if (obj == collects[i]) {
-			if (blocks[i] == D && door.isOpen)
-				alert('You Won');
+			if (blocks[i] == D && door.isOpen) {
+				isGameGoing = false;
+				alert('You Won!');
+				var dialog = document.getElementById('start_game_dialog');
+				dialog.show();
+			}
 			return true;
 		}
 	}
