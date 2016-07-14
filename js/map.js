@@ -191,3 +191,7 @@ var build = (function() {
 	}
 	
 })();
+
+var GetMapsNumber = (function() {
+	return 4;
+})();

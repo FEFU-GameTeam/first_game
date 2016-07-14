@@ -29,16 +29,33 @@ function main() {
     requestAnimFrame(main);
 };
 
+function beginning() {
+	var dialog = document.getElementById('start_game_dialog');
+	var select = document.getElementById('map_selection');
+	document.getElementById('show').onclick = function() {
+		dialog.show();
+	};
+	document.getElementById('exit').onclick = function() {
+		init();
+		dialog.close();
+	};
+	for (var i = 0; i < 4; ++i){
+		var option = document.createElement('option');
+		option.text = 'map ' + (i + 1);
+		option.value = Number(i);
+		select.add(option);
+	};
+};
+
 function init() {
-	var levelNumber = 0;
-	
-	levelNumber = 1; // -> get LevelNumber
+	var select = document.getElementById('map_selection');
+	var levelNumber = Number(select.options[select.selectedIndex].value); // выбор карты из комбобокса
 	player.posOnMap = mapping.setMap(map, levelNumber);
 	player.pos = [player.posOnMap[1] * spriteSize, player.posOnMap[0] * spriteSize];
 	coinsCount = mapping.getCoins(levelNumber);
     lastTime = Date.now();
     main();
-}
+};
 
 resources.load([
     'img/front.png',
@@ -55,7 +72,7 @@ resources.load([
 	'img/penguin3.png',
 	'img/door.png'
 ]);
-resources.onReady(init);
+resources.onReady(beginning);
 
 var player = {
     pos: [0, 0],
