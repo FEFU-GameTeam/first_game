@@ -4,17 +4,13 @@ var requestAnimFrame = (function(){
         window.mozRequestAnimationFrame    ||
         window.oRequestAnimationFrame      ||
         window.msRequestAnimationFrame     ||
-        function(callback){
+        function(callback) {
             window.setTimeout(callback, 1000 / 60);
         };
 })();
 
-
-const MAX_INT = Math.pow(2, 53) - 1;
 var map = [];
-var door;
 var coinsCount = 0;
-
 
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
@@ -30,47 +26,18 @@ function main() {
     render();
 
     lastTime = now;
-	//setTimeout(main, 1000 / 10)
-	requestAnimFrame(main);
+    requestAnimFrame(main);
 };
 
 function init() {
-//    reset();
-	mapping.setMap(map, 3);
-//	objectCount();
-	door = mapping.getDoor();
-	coinsCount = coins.length;
+	var levelNumber = 0;
+	
+	levelNumber = 0; // -> get LevelNumber
+	player.posOnMap = mapping.setMap(map, levelNumber);
+	player.pos = [player.posOnMap[1] * spriteSize, player.posOnMap[0] * spriteSize];
+	coinsCount = mapping.getCoins(levelNumber);
     lastTime = Date.now();
     main();
-}
-
-function objectCount() {
-	
-	for (var i = 0; i < map.length; i++) {
-		for (var j = 0; j < map[i].length; j++) {
-			var y = i * spriteSize, x = j * spriteSize;
-			
-			switch (map[i][j]) {
-				case B:
-					blocks.push([x, y]);
-					break;
-				case C:
-					coins.push([x, y]);
-					break;
-				case P:
-					buildPenguin(x, y);
-					map[i][j] = E;					
-				case S:
-					break;
-				case E:
-					break;
-				default:
-					grasses.push([x, y]);
-					break;
-			}	
-		}
-	}
-			
 }
 
 resources.load([
@@ -85,14 +52,18 @@ resources.load([
 	'img/coin.png',	
 	'img/penguin1.png',
 	'img/penguin2.png',
-	'img/penguin3.png'
+	'img/penguin3.png',
+	'img/door.png'
 ]);
 resources.onReady(init);
 
 var player = {
     pos: [0, 0],
-	btn: '',
-    sprite: new Sprite('img/front.png', [0, 0], [24, 32], 4, [0, 1, 2, 3])
+	posOnMap: [0, 0],
+	speed : 100,
+	active : false,
+	dir: '',
+    sprite: new Sprite('img/front.png', [0, 0], [32, 32], 0, [0, 1, 2, 3])
 };
 
 var grass = {
@@ -116,101 +87,154 @@ var coin = {
     sprite: new Sprite('img/coin.png', [0, 0], [32, 32], 0, 0)	
 }
 
-var blocks = [];
-var grasses = [];
-var coins = [];
-
-var lastFire = Date.now();
-var terrainPattern;
-
-var playerSpeed = 100;
+var door = {
+	pos: [0, 0],
+	isOpen: false,
+	sprite: new Sprite('img/door.png', [0, 0], [32, 32], 0, [0, 1])	
+}
 
 function update(dt) {
-
-//    handleInput(dt);
-    document.addEventListener('keydown', keydown, false);
- //   document.addEventListener('keyup',   keyup,   false);	
-//    updateEntities(dt);
-//	penguinMove(dt);
-//	updatePenguins(dt);
-//    checkCollisions();
-//	isGameFinished();
-
-};
-var KEY = { LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40 };
-
-function keydown(ev) {
-	var y = Math.floor(player.pos[1] / 32);
-	var x = Math.floor(player.pos[0] / 32);
-    var handled = false;
-    switch(ev.keyCode) {
-      case KEY.UP:     
-        if(checkPlayerBounds(y - 1, x)){
-			map[y][x] = E;
-			map[y - 1][x] = H;
-		}
-		break;
-      case KEY.DOWN:
-       if(checkPlayerBounds(y + 1, x)){
-			map[y + 1][x] = H;
-			map[y][x] = E;
-		};
-		break;
-      case KEY.LEFT:               
-        if(checkPlayerBounds(y, x - 1)){
-			map[y][x] = E;
-			map[y][x - 1] = H;  
-		};
-		break;
-      case KEY.RIGHT:      		
-        if(checkPlayerBounds(y, x + 1)){
-			map[y][x] = E;
-			map[y][x + 1] = H;  
-		};
-		break;
-    }
-}
-
-function checkPlayerBounds(y, x) {
-	return (map[y][x] == B) ? false : true;
-}
-
-function delObjectByCoords(point) {
-	
-	for (var j = 0; j < blocks.length; j++) {
-		
-		if (point[0] == blocks[j][0] && point[1] == blocks[j][1]) {
-			blocks[j] = [MAX_INT, MAX_INT];
-			break;
-		}
-	}
-	
-}
-
-function openDoor() {
-	
-	for (var i = 0; i < (door.size[0] / 32); i++) {
-		var a = [(door.pos[0] + i) * 32, door.pos[1] * 32];
-		delObjectByCoords(a);
-		map[door.pos[1]][door.pos[0] + i] = E;
-	}
-	
-	for (var i = 0; i < (door.size[1] / 32); i++) {
-		var a = [door.pos[0] * 32, (door.pos[1] + i) * 32];
-		delObjectByCoords(a);
-		map[door.pos[1] + i][door.pos[0]] = E;
-	}
-	
-	coinsCount = -1; 
-	
+    handleInput(dt);
+    updateEntities(dt);
+	updateDoor(dt);
+	//penguinMove(dt);
+	//updatePenguins(dt);
+    //checkCollisions();
+	//isGameFinished();
 }
 
 function render() {
 	build.draw(map);
 	//for(var i = 0; i < penguins.length; i++)
-		//renderEntity(penguins[i]);
-    //renderEntity(player);
+	//	renderEntity(penguins[i]);
+    renderEntity(player);
 };
+
+var prev = 0;
+
+function handleInput(dt) {
+	
+	if (player.active) {
+		if (player.dir == 'DOWN' && prev > player.pos[1]) {
+			player.pos[1] += player.speed * dt;
+		} else if (player.dir == 'UP' && prev < player.pos[1]) {
+			player.pos[1] -= player.speed * dt;
+		} else if (player.dir == 'LEFT' && prev < player.pos[0]) {
+			player.pos[0] -= player.speed * dt;
+		} else if (player.dir == 'RIGHT' && prev > player.pos[0]) {
+			player.pos[0] += player.speed * dt;
+		} else {
+			switch (player.dir) {
+				case 'RIGHT':
+					player.pos[0] = prev;
+					break;
+				case 'LEFT':
+					player.pos[0] = prev;
+					break;
+				case 'UP':
+					player.pos[1] = prev;
+					break;
+				case 'DOWN':
+					player.pos[1] = prev;
+					break;
+				
+			}
+			player.active = false;
+		}
+		return false;
+	}
+	
+	if(input.isDown('SHIFT')){
+		player.speed = 200;
+		player.sprite.speed = 20;
+	} else {
+		player.speed = 100;
+		player.sprite.speed = 5;
+	}
+	
+    if(input.isDown('DOWN') || input.isDown('s')) {
+		player.dir = 'DOWN';
+		if (!checkPlayerBounds()) {
+			player.active = true;
+			prev = player.pos[1] + spriteSize;
+			player.sprite.url = 'img/front.png';
+			player.posOnMap = [player.posOnMap[0] + 1, player.posOnMap[1]];
+		}
+	} else if(input.isDown('UP') || input.isDown('w')) {
+		player.dir = 'UP';
+		if (!checkPlayerBounds()) {
+			player.active = true;
+			prev = player.pos[1] - spriteSize;
+			player.sprite.url = 'img/back.png';
+			player.posOnMap = [player.posOnMap[0] - 1, player.posOnMap[1]];
+		}
+    } else if(input.isDown('LEFT') || input.isDown('a')) {
+		player.dir = 'LEFT';
+		if (!checkPlayerBounds()) {
+			player.active = true;
+			prev = player.pos[0] - spriteSize;
+			player.sprite.url = 'img/left.png';
+			player.posOnMap = [player.posOnMap[0], player.posOnMap[1] - 1];
+		}
+    } else if(input.isDown('RIGHT') || input.isDown('d')) {
+		player.dir = 'RIGHT';
+		if (!checkPlayerBounds()) {
+			player.active = true;
+			prev = player.pos[0] + spriteSize;
+			player.sprite.url = 'img/right.png';
+			player.posOnMap = [player.posOnMap[0], player.posOnMap[1] + 1];
+		}
+    } else {
+		player.active = false;
+		player.sprite.speed = 0;
+	}
+}
+
+var blocks = [B, P];
+var obtains = [ , C];
+
+function checkObjects(obj, collects) {
+	for (var i = 0; i < collects.length; ++i) {
+		if (obj == collects[i]) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+function checkPlayerBounds() {
+	var i = player.posOnMap[0], j = player.posOnMap[1];
+	
+	switch (player.dir) {
+		case 'RIGHT':
+			if (checkObjects(map[i][j + 1], blocks))
+				return true;
+			break;
+		case 'LEFT':
+			if (checkObjects(map[i][j - 1], blocks))
+				return true;
+			break;
+		case 'UP':
+			if (checkObjects(map[i - 1][j], blocks))
+				return true;
+			break;
+		case 'DOWN':
+			if (checkObjects(map[i + 1][j], blocks))
+				return true;
+			break;
+	}
+	
+	return false;
+}
+
+function updateDoor(dt) {
+	door.sprite.update(dt);
+}
+
+function updateEntities(dt) {
+    player.sprite.update(dt);
+}
 
 function renderEntity(entity) {
     ctx.save();
@@ -218,8 +242,3 @@ function renderEntity(entity) {
     entity.sprite.render(ctx);
     ctx.restore();
 }
-
-function reset() {
-	//penguin.pos = [450, 50];
-    //player.pos = [50, canvas.height / 2];
-};
