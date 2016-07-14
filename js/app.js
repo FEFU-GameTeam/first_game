@@ -32,7 +32,7 @@ function main() {
 function init() {
 	var levelNumber = 0;
 	
-	levelNumber = 0; // -> get LevelNumber
+	levelNumber = 1; // -> get LevelNumber
 	player.posOnMap = mapping.setMap(map, levelNumber);
 	player.pos = [player.posOnMap[1] * spriteSize, player.posOnMap[0] * spriteSize];
 	coinsCount = mapping.getCoins(levelNumber);
@@ -110,6 +110,13 @@ function render() {
     renderEntity(player);
 };
 
+function isGameFinished() {
+	
+	if (map[player.posOnMap[0]][player.posOnMap[1]] == D)
+		alert('You Won');
+	
+}
+
 var prev = 0;
 
 function handleInput(dt) {
@@ -151,38 +158,50 @@ function handleInput(dt) {
 		player.speed = 100;
 		player.sprite.speed = 5;
 	}
-	
+	var i = player.posOnMap[0], j = player.posOnMap[1];
     if(input.isDown('DOWN') || input.isDown('s')) {
 		player.dir = 'DOWN';
 		player.sprite.url = 'img/front.png';
-		if (!checkPlayerBounds(player.posOnMap[0] + 1, player.posOnMap[1])) {
+		if (!checkPlayerBounds(i + 1,  j)) {
+			checkCoins(i + 1,  j);
 			player.active = true;
 			prev = player.pos[1] + spriteSize;
-			player.posOnMap = [player.posOnMap[0] + 1, player.posOnMap[1]];
+			map[i][j] = E;
+			map[i + 1][j] = E;
+			player.posOnMap = [i + 1, j];
 		}
 	} else if(input.isDown('UP') || input.isDown('w')) {
 		player.dir = 'UP';
 		player.sprite.url = 'img/back.png';
-		if (!checkPlayerBounds(player.posOnMap[0] - 1, player.posOnMap[1])) {
+		if (!checkPlayerBounds(i - 1,  j)) {
+			checkCoins(i - 1, j);
 			player.active = true;
 			prev = player.pos[1] - spriteSize;
-			player.posOnMap = [player.posOnMap[0] - 1, player.posOnMap[1]];
+			map[i][j] = E;
+			map[i - 1][j] = E;
+			player.posOnMap = [i - 1, j];
 		}
     } else if(input.isDown('LEFT') || input.isDown('a')) {
 		player.dir = 'LEFT';
 		player.sprite.url = 'img/left.png';
-		if (!checkPlayerBounds(player.posOnMap[0], player.posOnMap[1] - 1)) {
+		if (!checkPlayerBounds(i, j - 1)) {
+			checkCoins(i, j - 1);
 			player.active = true;
 			prev = player.pos[0] - spriteSize;
-			player.posOnMap = [player.posOnMap[0], player.posOnMap[1] - 1];
+			map[i][j] = E;
+			map[i][j - 1] = E;
+			player.posOnMap = [i, j - 1];
 		}
     } else if(input.isDown('RIGHT') || input.isDown('d')) {
 		player.dir = 'RIGHT';
 		player.sprite.url = 'img/right.png';
-		if (!checkPlayerBounds(player.posOnMap[0], player.posOnMap[1] + 1)) {
+		if (!checkPlayerBounds(i,  j + 1)) {
+			checkCoins(i, j + 1);
 			player.active = true;
 			prev = player.pos[0] + spriteSize;
-			player.posOnMap = [player.posOnMap[0], player.posOnMap[1] + 1];
+			map[i][j] = E;
+			map[i][j + 1] = E;
+			player.posOnMap = [i, j + 1];
 		}
     } else {
 		player.active = false;
@@ -190,12 +209,14 @@ function handleInput(dt) {
 	}
 }
 
-var blocks = [B, P];
-var obtains = [ , C];
+var blocks = [B, P, D];
+var obtains = [C];
 
 function checkObjects(obj, collects) {
 	for (var i = 0; i < collects.length; ++i) {
 		if (obj == collects[i]) {
+			if (blocks[i] == D && door.isOpen)
+				alert('You Won');
 			return true;
 		}
 	}
@@ -207,6 +228,25 @@ function checkPlayerBounds(i, j) {
 	if (checkObjects(map[i][j], blocks))
 		return true;
 	return false;
+}
+
+function checkCoins(i, j) {
+	
+	if (checkObjects(map[i][j], obtains))
+		coinsCount--;
+	
+	if (coinsCount == 0)
+		openDoor();
+	
+}
+
+function openDoor() {
+	
+	door.sprite.speed = 5;
+	door.isOpen = true;
+	
+	coinsCount = -1; 
+	
 }
 
 function updateDoor(dt) {

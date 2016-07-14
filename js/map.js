@@ -25,7 +25,7 @@ var mapping = (function() {
 			B,  , B, B,  , C, B, C,  , B, C,  ,  , C,  , C, C,  , C, B,
 			B,  ,  , B, C,  , B,  ,  , B, B, B, B, B, B, P,  ,  ,  , B,
 			B,  ,  ,  ,  ,  , B, P,  , B, P, C, C, P, B,  ,  ,  ,  , B,
-			B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , E, E, B,
 			B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B,
 		],
 		
@@ -164,7 +164,15 @@ var build = (function() {
 							break;
 						case S:
 							break;
-						case E, W, P:
+						case E:
+							ground.pos = [x, y];
+							renderEntity(ground);
+							break;
+						case W:
+							ground.pos = [x, y];
+							renderEntity(ground);
+							break;
+						case P:
 							ground.pos = [x, y];
 							renderEntity(ground);
 							break;
