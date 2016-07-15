@@ -32,6 +32,7 @@ function coinsFall(dt) {
 			if(map[y + 1][x] == W){
 				if(player.health > 1){
 					player.health -= 1;
+					document.getElementById('hp_bar').style.backgroundPosition = "" + (5 - player.health) * 20 + "% 0%";
 					checkCoins(y,  x);
 					map[y][x] = E;
 					console.log(player.health);

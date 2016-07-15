@@ -106,6 +106,7 @@ function main() {
 
 function init() {map_name_showed
 	var select = document.getElementById('map_selection');
+	document.getElementById('hp_bar').style.backgroundPosition = "0% 0%";
 	var levelNumber = Number(select.options[select.selectedIndex].value); // выбор карты из комбобокса
 	document.getElementById('map_name_showed').innerHTML = select.options[select.selectedIndex].text;
 	player.posOnMap = mapping.setMap(map, levelNumber);
