@@ -49,6 +49,7 @@ function start(){
 	window.lastTime = 0;
 		
 	window.player = {
+		health: 5,
 		pos: [0, 0],
 		posOnMap: [0, 0],
 		speed : 100,

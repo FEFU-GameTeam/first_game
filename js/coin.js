@@ -29,6 +29,22 @@ function coinsFall(dt) {
 		var y = coins[i].posOnMap[1];
 		
 		if (coins[i].active) {
+			if(map[y + 1][x] == W){
+				if(player.health > 1){
+					player.health -= 1;
+					checkCoins(y,  x);
+					map[y][x] = E;
+					console.log(player.health);
+					continue;
+				}
+				else{
+					isGameGoing = false;
+					var dialog = document.getElementById('end_game_dialog');
+					dialog.style.backgroundImage = 'url(img/game_over.png)'
+					dialog.show();
+				}
+			}
+			
 			if (coins[i].prevPos > coins[i].pos[1]) {
 				coins[i].pos[1] += coinSpeed * dt;
 			} else {
@@ -45,7 +61,6 @@ function coinsFall(dt) {
 			map[y + 1][x] = C;
 			coins[i].posOnMap = [x, y + 1];			
 		}
-		
 	}
 }
 
