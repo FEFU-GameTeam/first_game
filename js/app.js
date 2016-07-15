@@ -103,12 +103,15 @@ function main() {
     	requestAnimFrame(main);
 };
 
-function init() {
+function init() {map_name_showed
 	var select = document.getElementById('map_selection');
 	var levelNumber = Number(select.options[select.selectedIndex].value); // выбор карты из комбобокса
+	document.getElementById('map_name_showed').innerHTML = select.options[select.selectedIndex].text;
 	player.posOnMap = mapping.setMap(map, levelNumber);
 	player.pos = [player.posOnMap[1] * spriteSize, player.posOnMap[0] * spriteSize];
 	coinsCount = mapping.getCoins(levelNumber);
+	document.getElementById('coins_status').innerHTML = coinsCount;
+	document.getElementById('coins_max').innerHTML = coinsCount;
     lastTime = Date.now();
     main();
 };
@@ -278,6 +281,7 @@ function checkCoins(i, j) {
 			}
 		}
 		coinsCount--;
+		document.getElementById('coins_status').innerHTML = coinsCount;
 	}
 	
 	if (coinsCount == 0)
