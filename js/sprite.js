@@ -25,10 +25,7 @@
                 frame = this.frames[idx % max];
 				this.indexFrame = idx % max;
                 if(this.once && idx >= max) {
-                    //this.done = true;
-					//this.frames = 5;
 					this.speed = 0;
-					//return;
                 }
             }
             else {

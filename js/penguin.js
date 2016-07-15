@@ -6,7 +6,7 @@ function buildPenguin(x, y){
 		inflated: false,
 		inflatedActive: false,
 		prevPos: 0,
-		sprite: new Sprite('img/penguin1.png', [0, 0], [32, 32], 0, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])	
+		sprite: new Sprite('img/penguin1.png', [0, 0], [31.5, 32], 0, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])	
 	};
 	penguins.push(penguin);
 };
