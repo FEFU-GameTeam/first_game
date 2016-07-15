@@ -29,7 +29,7 @@ function beginning() {
 		start();
 		dialog.close();
 	};
-	for (var i = 0; i < 4; ++i){
+	for (var i = 0; i < 6; ++i){
 		var option = document.createElement('option');
 		option.text = 'map ' + (i + 1);
 		option.value = Number(i);

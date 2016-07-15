@@ -68,18 +68,18 @@ var mapping = (function() {
 	var map_2 = { 
 	
 		map : [
-			,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,
-			, B,  , B,  , B, B, B,  , B, P,  ,  , B,  ,  ,  , B, B, B,
-			, B,  , B,  , B,  ,  ,  , B,  , P,  , B,  ,  ,  , B, E, B,
-			, B, B, B,  , B, B, B,  , B,  ,  ,  , B,  ,  ,  ,  , E, B,
-			, B,  , B,  , B,  ,  ,  , B,  ,  ,  , B,  ,  ,  , B, E, B,
-			, B,  , B,  , B, B, B,  , B, B, B,  , B, B, B,  , B, B, B,
-			,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,
-			, B, B, B, B, B, B, B,  , B, B, B,  ,  ,  , W,  ,  ,  ,  ,
-			, B,  , B,  , B,  , B,  , B, B, B,  , B,  , B,  ,  ,  ,  ,
-			, B,  , B,  , B, B, B,  , B, B, B,  , B, B,  ,  ,  ,  ,  ,
-			, B,  ,  ,  ,  ,  ,  ,  , B,  , B,  , B,  , B,  ,  ,  ,  ,
-			, B,  , B,  ,  ,  , B,  , B, B, B,  , B,  , B,  , C,  ,  ,
+			B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B,
+			B, B,  , B,  , B, B, B,  , B, P,  ,  , B, W,  ,  , B, B, B,
+			B, B,  , B,  , B,  ,  ,  , B,  , P,  , B,  ,  ,  , B, E, B,
+			B, B, B, B,  , B, B, B,  , B,  ,  ,  , B,  ,  ,  ,  , E, B,
+			B, B,  , B,  , B,  ,  ,  , B,  ,  ,  , B,  ,  ,  , B, E, B,
+			B, B,  , B,  , B, B, B,  , B, B, B,  , B, B, B,  , B, B, B,
+			B, D,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B, B, B, B, B, B, B, B,  , B, B, B,  ,  ,  ,  ,  ,  ,  , B,
+			B, B,  , B,  , B,  , B,  , B, B, B,  , B,  , B,  ,  ,  , B,
+			B, B,  , B,  , B, B, B,  , B, B, B,  , B, B,  ,  ,  ,  , B,
+			B, B,  ,  ,  ,  ,  ,  ,  , B,  , B,  , B,  , B,  , C,  , B,
+			B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B,
 		],
 		
 		size : {
@@ -95,18 +95,18 @@ var mapping = (function() {
 	var map_3 = {
 		
 		map : [
-			,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,
-			,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,
-			,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,
-			,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,
-			,  ,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,
-			,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , W,  ,  ,  ,  ,  ,  ,  ,
-			,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,
-			,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,
-			,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,
-			,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,
-			,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,
-			,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,
+			B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B,
+			B,  ,  , B,  ,  ,  ,  ,  , P, P,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  ,  ,  ,  ,  ,  ,  , C, C,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  ,  ,  ,  ,  ,  ,  , B, B,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B, D,  ,  , B,  ,  ,  ,  , B, C,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  ,  ,  ,  ,  ,  ,  , B, B,  , W,  ,  ,  ,  ,  ,  , B,
+			B,  ,  ,  ,  ,  ,  ,  ,  , B, C,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  ,  ,  ,  ,  ,  ,  , C, B,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  ,  ,  ,  ,  ,  ,  , B, C,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  ,  ,  ,  ,  ,  ,  , C, B,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  ,  ,  ,  ,  ,  ,  , B, C,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B,
 		],
 		
 		size : {
@@ -114,11 +114,64 @@ var mapping = (function() {
 			height : 12,
 		},
 		
-		coins : 0,
+		coins : 8,
 		
 	};
+
+	var map_4 = {
+
+		map : [
+			B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B,
+			B, P, P, P, P, P, P, P, P, B,  ,  ,  ,  ,  ,  ,  ,  , P, B,
+			B,  ,  ,  ,  ,  , C,  ,  , B,  , C, C,  , C, C,  , P, C, B,
+			B,  , B, B, B, B, B, B,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  , B,
+			B,  ,  ,  , B, C, C,  , C, B,  ,  ,  , C,  , C, P,  ,  , B,
+			B,  ,  ,  ,  , C, C,  , P, B, C, C, P, P, P,  , C, B, C, B,
+			B,  , B, B, B, B, B, C, C, B,  ,  , C, C, C,  ,  , B, C, D,
+			B,  , W, B, P, C, B,  ,  , B,  ,  ,  ,  ,  , P, B, B, B, B,
+			B,  , B, B,  , C, B, C,  , B, C,  ,  , C,  , C, C,  , C, B,
+			B,  ,  , B, C, P, B,  ,  , B, B, B, B, B, B, P,  ,  ,  , B,
+			B,  ,  , B,  ,  , B, P,  , B, P, C, C, P, B,  ,  ,  ,  , B,
+			B,  ,  ,  ,  ,  , B,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , E, E, B,
+			B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B,
+		],
+
+		size : {
+			width : 20,
+			height : 13,
+		},
+
+		coins : 34
+
+	};
+
+
+	var map_5= {
+
+		map : [
+			B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B,
+			B, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, B,
+			B, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, B,
+			B, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, B,
+			B, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, B,
+			B, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, B,
+			B, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, B,
+			B, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, B,
+			B, P, B, P, P, P, P, P, P, P, P, P, P, P, P, P, P, P, B, B,
+			B, D, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, C, W, B,
+			B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B,
+		],
+
+		size : {
+			width : 20,
+			height : 11,
+		},
+
+		coins : 16,
+
+	};
 	
-	var maps = [map_0, map_1, map_2, map_3], levelNumber = 0;
+	var maps = [map_0, map_1, map_2, map_3, map_4, map_5], levelNumber = 0;
 	
 	return {
 		
@@ -197,5 +250,5 @@ var build = (function() {
 })();
 
 var GetMapsNumber = (function() {
-	return 4;
+	return 6;
 })();
